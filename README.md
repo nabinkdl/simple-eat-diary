@@ -25,6 +25,14 @@ A modern, privacy-focused meal tracking application designed to help you monitor
 *   **Budget Tracking**: Set your "Price Per Meal" in Settings.
 *   **Real-time Calc**: Instantly see your estimated monthly expense based on consumption.
 
+<img width="1440" height="900" alt="Screenshot 2026-01-21 at 2 37 36 am" src="https://github.com/user-attachments/assets/a4232257-cc2e-47c1-9052-008b02c47d32" />
+
+<img width="1440" height="900" alt="Screenshot 2026-01-21 at 2 38 10 am" src="https://github.com/user-attachments/assets/44db061c-2dd0-40aa-a38e-bffc76b6bcc4" />
+<img width="1440" height="900" alt="Screenshot 2026-01-21 at 2 38 26 am" src="https://github.com/user-attachments/assets/42ae62ee-b985-48fa-b959-f9373a270610" />
+<img width="1440" height="900" alt="Screenshot 2026-01-21 at 2 38 37 am" src="https://github.com/user-attachments/assets/fb2fd179-5e03-4128-b353-1b10ad3b50b2" />
+
+
+
 ## 🛠️ Tech Stack
 
 *   **Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)
