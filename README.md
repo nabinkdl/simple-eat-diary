@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
+# 🍽️ Simple Eat Diary
 
-## Project info
+A modern, privacy-focused meal tracking application designed to help you monitor your daily eating habits and estimate monthly costs. Built with a "Zen Modern" aesthetic, it combines simplicity with powerful features like Nepali Calendar support and offline-first PWA capabilities.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## ✨ Key Features
 
-## How can I edit this code?
+### 📅 Smart Calendar
+*   **Nepali Calendar (Bikram Sambat)**: Fully integrated BS calendar for users in Nepal, with accurate month/date conversion.
+*   **Implicit Tracking**: Simple daily toggle for "Morning" and "Night" meals. Unmarked days are automatically treated as skipped.
+*   **Monthly Overview**: Visual grid showing your streak.
+    *   🟢 **Green**: Both meals eaten.
+    *   🟡 **Yellow**: One meal eaten.
+    *   🔴 **Red**: Both meals skipped (but day passed).
 
-There are several ways of editing your application.
+### 📱 Progressive Web App (PWA)
+*   **Install Everywhere**: Works as a native app on Android, iOS, and Desktop.
+*   **Universal Install Banner**: Smart detection prompts you to install on compatible devices or guides you manually (e.g., on iOS).
+*   **Offline Support**: View your history even without internet access.
 
-**Use Lovable**
+### 🛡️ Privacy & Security
+*   **PIN Protection**: Secure your historic data. Critical actions like "Reset Data" require your PIN verification.
+*   **Local First**: Optimized for speed and privacy.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### 💰 Cost Estimation
+*   **Budget Tracking**: Set your "Price Per Meal" in Settings.
+*   **Real-time Calc**: Instantly see your estimated monthly expense based on consumption.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Tech Stack
 
-**Use your preferred IDE**
+*   **Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+*   **Animations**: [Framer Motion](https://www.framer.com/motion/)
+*   **State/Data**: Context API + Firebase (Firestore/Auth)
+*   **PWA**: [vite-plugin-pwa](https://vite-pwa-org.netlify.app/)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🚀 Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
+*   Node.js & npm (or bun/yarn)
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/yourusername/simple-eat-diary.git
+    cd simple-eat-diary
+    ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2.  **Install dependencies**
+    ```bash
+    npm install
+    # or
+    bun install
+    ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3.  **Environment Setup**
+    Create a `.env` file in the root directory with your Firebase config:
+    ```env
+    VITE_FIREBASE_API_KEY=your_api_key
+    VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+    VITE_FIREBASE_PROJECT_ID=your_project_id
+    VITE_FIREBASE_STORAGE_BUCKET=your_bucket.appspot.com
+    VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+    VITE_FIREBASE_APP_ID=your_app_id
+    ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+4.  **Run Development Server**
+    ```bash
+    npm run dev
+    ```
 
-**Edit a file directly in GitHub**
+## 📱 Mobile Installation Guide
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Android
+1.  Open Chrome.
+2.  Tap "Install" on the bottom banner OR tap the **three dots** menu -> **Install App**.
 
-**Use GitHub Codespaces**
+### iOS (iPhone/iPad)
+1.  Open Safari.
+2.  Tap the **Share** button.
+3.  Scroll down and select **Add to Home Screen**.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 📄 License
+MIT License - build mostly for personal use but free to fork and adapt!
