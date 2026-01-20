@@ -1,8 +1,6 @@
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -11,7 +9,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Lock } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Lock, ShieldAlert } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PinDialogProps {
   open: boolean;
@@ -24,10 +24,15 @@ export function PinDialog({ open, onOpenChange, onSuccess, correctPin }: PinDial
   const [pin, setPin] = useState("");
   const [error, setError] = useState(false);
 
-  const handleComplete = (value: string) => {
-    if (value === correctPin) {
+  useEffect(() => {
+    if (open) {
       setPin("");
       setError(false);
+    }
+  }, [open]);
+
+  const handleComplete = (value: string) => {
+    if (value === correctPin) {
       onSuccess();
       onOpenChange(false);
     } else {
@@ -38,49 +43,49 @@ export function PinDialog({ open, onOpenChange, onSuccess, correctPin }: PinDial
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[340px] bg-card">
-        <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10 w-fit">
-            <Lock className="w-6 h-6 text-primary" />
+      <DialogContent className="sm:max-w-md bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-white/20 shadow-2xl rounded-[2rem] p-8 gap-8">
+        <DialogHeader className="items-center text-center space-y-4">
+          <div className={cn(
+            "w-16 h-16 rounded-full flex items-center justify-center transition-colors duration-500",
+            error ? "bg-red-100 text-red-500 animate-pulse" : "bg-indigo-50 text-indigo-500"
+          )}>
+            {error ? <ShieldAlert className="w-8 h-8" /> : <Lock className="w-8 h-8" />}
           </div>
-          <DialogTitle className="font-display text-xl">Enter PIN</DialogTitle>
-          <DialogDescription className="font-body">
-            Enter your 4-digit PIN to edit past entries
-          </DialogDescription>
+          <div>
+            <DialogTitle className="font-display text-2xl font-bold tracking-tight">
+              {error ? "Incorrect PIN" : "Security Check"}
+            </DialogTitle>
+            <p className="text-muted-foreground mt-2 font-medium">
+              Enter your security PIN to unlock past entries
+            </p>
+          </div>
         </DialogHeader>
-        
-        <div className="flex flex-col items-center gap-4 py-4">
+
+        <div className="flex justify-center pb-4">
           <InputOTP
             maxLength={4}
             value={pin}
-            onChange={setPin}
+            onChange={(val) => {
+              setPin(val);
+              if (error) setError(false);
+            }}
             onComplete={handleComplete}
           >
-            <InputOTPGroup className="gap-2">
-              <InputOTPSlot 
-                index={0} 
-                className={`w-12 h-14 text-xl rounded-xl border-2 ${error ? 'border-destructive' : 'border-border'}`}
-              />
-              <InputOTPSlot 
-                index={1} 
-                className={`w-12 h-14 text-xl rounded-xl border-2 ${error ? 'border-destructive' : 'border-border'}`}
-              />
-              <InputOTPSlot 
-                index={2} 
-                className={`w-12 h-14 text-xl rounded-xl border-2 ${error ? 'border-destructive' : 'border-border'}`}
-              />
-              <InputOTPSlot 
-                index={3} 
-                className={`w-12 h-14 text-xl rounded-xl border-2 ${error ? 'border-destructive' : 'border-border'}`}
-              />
+            <InputOTPGroup className="gap-4">
+              {[0, 1, 2, 3].map((i) => (
+                <InputOTPSlot
+                  key={i}
+                  index={i}
+                  className={cn(
+                    "w-14 h-16 text-2xl rounded-2xl border-2 transition-all duration-300",
+                    error
+                      ? "border-red-200 bg-red-50 text-red-500"
+                      : "border-slate-100 bg-slate-50 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                  )}
+                />
+              ))}
             </InputOTPGroup>
           </InputOTP>
-          
-          {error && (
-            <p className="text-sm text-destructive animate-fade-in">
-              Incorrect PIN. Please try again.
-            </p>
-          )}
         </div>
       </DialogContent>
     </Dialog>

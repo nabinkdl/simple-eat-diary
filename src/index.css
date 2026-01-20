@@ -1,114 +1,101 @@
+/* Fonts loaded via index.html for performance */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700&family=Belleza&display=swap');
-
 @layer base {
   :root {
-    /* Core palette */
-    --background: 60 56% 91%;
-    --foreground: 150 20% 20%;
+    /* Premium Palette - Light Mode */
+    --background: 210 40% 98%;
+    /* Cool white, clearer than before */
+    --foreground: 222 47% 11%;
+    /* Deep slate blue, high contrast */
 
-    --card: 60 30% 96%;
-    --card-foreground: 150 20% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    --popover: 60 30% 96%;
-    --popover-foreground: 150 20% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 152 36% 58%;
-    --primary-foreground: 60 56% 98%;
+    /* Brand Colors - Modern Green & Warm Accents */
+    --primary: 142 76% 36%;
+    /* Deep, trustworthy green */
+    --primary-foreground: 355.7 100% 97.3%;
 
-    --secondary: 60 40% 88%;
-    --secondary-foreground: 150 20% 25%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11.2%;
 
-    --muted: 60 20% 85%;
-    --muted-foreground: 150 10% 45%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 26 58% 56%;
-    --accent-foreground: 60 56% 98%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222 47% 11.2%;
 
-    --destructive: 0 65% 55%;
-    --destructive-foreground: 60 56% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-    --success: 152 36% 58%;
-    --success-foreground: 60 56% 98%;
+    --success: 142 76% 36%;
+    --success-foreground: 355.7 100% 97.3%;
 
-    --warning: 26 58% 56%;
-    --warning-foreground: 60 56% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
 
-    --border: 60 20% 82%;
-    --input: 60 20% 82%;
-    --ring: 152 36% 58%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 76% 36%;
 
     --radius: 1rem;
 
-    /* Custom design tokens */
-    --shadow-soft: 0 4px 20px -4px hsl(150 20% 20% / 0.08);
-    --shadow-card: 0 8px 30px -8px hsl(150 20% 20% / 0.12);
-    --shadow-elevated: 0 16px 40px -12px hsl(150 20% 20% / 0.15);
+    /* Enhanced Shadows for Glassmorphism & Depth */
+    --shadow-soft: 0 2px 10px -2px rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+    --shadow-elevated: 0 20px 50px -12px rgba(0, 0, 0, 0.12);
 
-    --gradient-primary: linear-gradient(135deg, hsl(152 36% 58%), hsl(152 40% 48%));
-    --gradient-accent: linear-gradient(135deg, hsl(26 58% 56%), hsl(26 65% 46%));
-    --gradient-success: linear-gradient(135deg, hsl(152 45% 55%), hsl(152 50% 45%));
-    --gradient-warning: linear-gradient(135deg, hsl(26 58% 56%), hsl(26 65% 46%));
-    --gradient-danger: linear-gradient(135deg, hsl(0 65% 55%), hsl(0 70% 45%));
-    --gradient-card: linear-gradient(145deg, hsl(60 30% 98%), hsl(60 30% 94%));
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(145 80% 30%));
+    --gradient-accent: linear-gradient(135deg, hsl(24 95% 58%), hsl(24 100% 50%));
+    /* Vibrant Orange */
+    --gradient-success: linear-gradient(135deg, hsl(142 70% 45%), hsl(142 80% 35%));
+    --gradient-warning: linear-gradient(135deg, hsl(45 95% 55%), hsl(45 100% 45%));
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 90% 50%));
+    --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
+    /* Glassy */
 
-    /* Sidebar */
-    --sidebar-background: 60 30% 96%;
-    --sidebar-foreground: 150 20% 20%;
-    --sidebar-primary: 152 36% 58%;
-    --sidebar-primary-foreground: 60 56% 98%;
-    --sidebar-accent: 60 40% 88%;
-    --sidebar-accent-foreground: 150 20% 25%;
-    --sidebar-border: 60 20% 82%;
-    --sidebar-ring: 152 36% 58%;
   }
 
   .dark {
-    --background: 150 20% 10%;
-    --foreground: 60 30% 95%;
+    /* Zen Modern Palette - Dark Mode */
+    --background: 222 47% 11%;
+    /* Deep slate/blue */
+    --foreground: 210 40% 98%;
 
-    --card: 150 18% 14%;
-    --card-foreground: 60 30% 95%;
+    --card: 222 47% 10%;
+    /* Slightly darker than background for contrast */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 150 18% 14%;
-    --popover-foreground: 60 30% 95%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 152 40% 50%;
-    --primary-foreground: 150 20% 10%;
+    --primary: 255 60% 70%;
+    /* Lighter Violet for visibility */
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 150 15% 20%;
-    --secondary-foreground: 60 30% 90%;
+    --secondary: 160 30% 20%;
+    --secondary-foreground: 160 40% 90%;
 
-    --muted: 150 12% 22%;
-    --muted-foreground: 60 15% 60%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 26 55% 50%;
-    --accent-foreground: 150 20% 10%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 60 30% 95%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
 
-    --success: 152 40% 50%;
-    --success-foreground: 150 20% 10%;
-
-    --warning: 26 55% 50%;
-    --warning-foreground: 150 20% 10%;
-
-    --border: 150 12% 22%;
-    --input: 150 12% 22%;
-    --ring: 152 40% 50%;
-
-    --sidebar-background: 150 18% 14%;
-    --sidebar-foreground: 60 30% 95%;
-    --sidebar-primary: 152 40% 50%;
-    --sidebar-primary-foreground: 150 20% 10%;
-    --sidebar-accent: 150 15% 20%;
-    --sidebar-accent-foreground: 60 30% 90%;
-    --sidebar-border: 150 12% 22%;
-    --sidebar-ring: 152 40% 50%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 255 60% 70%;
   }
 }
 
@@ -117,67 +104,56 @@
     @apply border-border;
   }
 
-  html {
-    scroll-behavior: smooth;
+  html,
+  body,
+  #root {
+    @apply h-full w-full overflow-hidden;
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Alegreya', serif;
+    @apply bg-background text-foreground font-sans antialiased;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: none;
+    /* Disables browser-level scrolling/zooming */
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Belleza', sans-serif;
-    letter-spacing: 0.02em;
+  .font-display {
+    font-family: 'Geist', 'Inter', sans-serif;
   }
 }
 
 @layer components {
+
+  /* Cards */
   .card-elevated {
-    @apply bg-card rounded-2xl shadow-card border border-border/50;
-    background: var(--gradient-card);
+    @apply bg-card rounded-[2rem] border border-white/20 dark:border-white/5 shadow-soft hover:shadow-card transition-all duration-300;
   }
 
-  .btn-meal {
-    @apply relative overflow-hidden transition-all duration-300 ease-out;
-    @apply rounded-2xl font-medium text-lg py-6 px-8;
-    @apply active:scale-95 touch-manipulation;
+  /* Glass/Blur Utilities */
+  .glass {
+    @apply bg-white/70 dark:bg-black/30 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-soft;
   }
 
-  .btn-meal-yes {
-    @apply btn-meal;
-    background: var(--gradient-success);
-    @apply text-success-foreground shadow-soft;
-    @apply hover:shadow-elevated hover:-translate-y-0.5;
+  .glass-card {
+    @apply glass rounded-3xl transition-all duration-300 hover:shadow-card hover:-translate-y-1;
   }
 
-  .btn-meal-yes-outline {
-    @apply btn-meal;
-    @apply bg-transparent border-2 border-primary text-primary;
-    @apply hover:bg-primary/10;
-  }
-
-  .btn-meal-no {
-    @apply btn-meal;
-    background: var(--gradient-warning);
-    @apply text-warning-foreground shadow-soft;
-    @apply hover:shadow-elevated hover:-translate-y-0.5;
-  }
-
-  .btn-meal-no-outline {
-    @apply btn-meal;
-    @apply bg-transparent border-2 border-accent text-accent;
-    @apply hover:bg-accent/10;
-  }
-
+  /* Calendar */
   .calendar-day {
-    @apply aspect-square flex items-center justify-center rounded-xl font-medium;
-    @apply transition-all duration-200 cursor-pointer;
-    @apply hover:scale-105 active:scale-95;
+    @apply aspect-square flex items-center justify-center rounded-2xl font-medium text-sm transition-all duration-300 cursor-pointer relative overflow-hidden;
+  }
+
+  .calendar-day:hover {
+    @apply scale-105 shadow-md z-10;
+  }
+
+  .calendar-day:active {
+    @apply scale-95;
   }
 
   .calendar-day-success {
-    @apply calendar-day text-success-foreground;
+    @apply calendar-day text-primary-foreground;
     background: var(--gradient-success);
   }
 
@@ -192,26 +168,27 @@
   }
 
   .calendar-day-empty {
-    @apply calendar-day bg-muted/30 text-muted-foreground;
+    @apply calendar-day bg-muted/30 text-muted-foreground hover:bg-muted/50;
   }
 
   .calendar-day-future {
-    @apply calendar-day bg-secondary/50 text-secondary-foreground/60;
+    @apply calendar-day opacity-30 cursor-not-allowed hover:scale-100 hover:shadow-none;
   }
 
+  /* Navigation */
   .bottom-nav {
     @apply fixed bottom-0 left-0 right-0 z-50;
-    @apply bg-card/95 backdrop-blur-xl border-t border-border;
+    @apply bg-card/80 backdrop-blur-xl border-t border-border;
     @apply safe-area-inset-bottom;
   }
 
   .nav-item {
-    @apply flex flex-col items-center gap-1 py-3 px-4;
-    @apply text-muted-foreground transition-colors duration-200;
+    @apply flex flex-col items-center gap-1 py-3 px-4 rounded-xl;
+    @apply text-muted-foreground transition-all duration-300;
   }
 
   .nav-item-active {
-    @apply nav-item text-primary;
+    @apply nav-item text-primary bg-primary/10;
   }
 }
 
@@ -236,31 +213,20 @@
     touch-action: manipulation;
   }
 
-  .animate-pulse-subtle {
-    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .text-balance {
+    text-wrap: balance;
   }
 
-  @keyframes pulse-subtle {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.85;
-    }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
-  .animate-bounce-in {
-    animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  @keyframes bounce-in {
-    0% {
-      transform: scale(0.9);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

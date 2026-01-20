@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,9 +6,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { MealSection } from "./MealSection";
-import { getMealForDate, updateMeal, isToday, isPastDate, getSettings } from "@/lib/storage";
+import { isToday, isPastDate, getSettings } from "@/lib/storage";
 import { PinDialog } from "./PinDialog";
 import { format } from "date-fns";
+import { useMeals } from "@/hooks/useMeals";
 
 interface EditMealDialogProps {
   date: Date | null;
@@ -18,32 +19,29 @@ interface EditMealDialogProps {
 }
 
 export function EditMealDialog({ date, open, onOpenChange, onUpdate }: EditMealDialogProps) {
-  const [meal, setMeal] = useState({ morning: null as boolean | null, night: null as boolean | null });
   const [pinDialogOpen, setPinDialogOpen] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const settings = getSettings();
 
-  useEffect(() => {
-    if (date) {
-      setMeal(getMealForDate(date));
-      setIsUnlocked(false);
-    }
-  }, [date]);
+  // Conditionally hook usage is generally bad, but date can be null here.
+  // We need to ensure useMeals can handle null date or we pass a dummy date.
+  // Passing dummy date when closed is safer.
+  const hookDate = date || new Date();
+  const { meal, updateMealRecord, loading } = useMeals(hookDate);
 
   if (!date) return null;
 
   const needsPin = isPastDate(date) && settings.pinEnabled && !isUnlocked;
   const isTodayDate = isToday(date);
 
-  const handleMealUpdate = (type: 'morning' | 'night', value: boolean) => {
+  const handleMealUpdate = async (type: 'morning' | 'night', value: boolean) => {
     if (needsPin) {
       setPinDialogOpen(true);
       return;
     }
-    
-    updateMeal(date, type, value);
-    setMeal(prev => ({ ...prev, [type]: value }));
-    onUpdate();
+
+    await updateMealRecord(type, value);
+    onUpdate(); // Trigger refresh if parent needs it (though parent should use real-time listeners now)
   };
 
   const handlePinSuccess = () => {
@@ -60,28 +58,32 @@ export function EditMealDialog({ date, open, onOpenChange, onUpdate }: EditMealD
               {isTodayDate && <span className="text-primary ml-2">(Today)</span>}
             </DialogTitle>
           </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <MealSection
-              title="Morning Meal"
-              type="morning"
-              value={meal.morning}
-              onSelect={(value) => handleMealUpdate('morning', value)}
-            />
-            
-            <MealSection
-              title="Night Meal"
-              type="night"
-              value={meal.night}
-              onSelect={(value) => handleMealUpdate('night', value)}
-            />
-            
-            {needsPin && (
-              <p className="text-sm text-muted-foreground text-center bg-muted/50 rounded-xl p-3">
-                🔒 PIN required to edit past entries
-              </p>
-            )}
-          </div>
+
+          {loading ? (
+            <div className="py-8 text-center text-muted-foreground animate-pulse">Loading...</div>
+          ) : (
+            <div className="space-y-4 py-4">
+              <MealSection
+                title="Morning Meal"
+                type="morning"
+                value={meal.morning}
+                onSelect={(value) => handleMealUpdate('morning', value)}
+              />
+
+              <MealSection
+                title="Night Meal"
+                type="night"
+                value={meal.night}
+                onSelect={(value) => handleMealUpdate('night', value)}
+              />
+
+              {needsPin && (
+                <p className="text-sm text-muted-foreground text-center bg-muted/50 rounded-xl p-3">
+                  🔒 PIN required to edit past entries
+                </p>
+              )}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
 
