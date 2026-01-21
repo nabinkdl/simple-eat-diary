@@ -14,6 +14,7 @@ import { PWAInstallBanner } from "./components/PWAInstallBanner";
 // Lazy Load Pages
 const TodayPage = lazy(() => import("./pages/TodayPage"));
 const CalendarPage = lazy(() => import("./pages/CalendarPage"));
+const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -48,6 +49,7 @@ const App = () => (
                   }>
                     <Route index element={<CalendarPage />} />
                     <Route path="history" element={<TodayPage />} />
+                    <Route path="analytics" element={<AnalyticsPage />} />
                     <Route path="settings" element={<SettingsPage />} />
                   </Route>
 

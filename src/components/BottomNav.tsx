@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Calendar, Utensils, Settings } from "lucide-react";
+import { Calendar, Utensils, Settings, PieChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { path: "/dashboard", icon: Calendar, label: "Calendar" },
+  { path: "/dashboard", icon: Calendar, label: "History" },
   { path: "/dashboard/history", icon: Utensils, label: "Today" },
+  { path: "/dashboard/analytics", icon: PieChart, label: "Analytics" },
   { path: "/dashboard/settings", icon: Settings, label: "Settings" },
 ];
 

@@ -2,7 +2,8 @@ import { MealSection } from "@/components/MealSection";
 import { StatCard } from "@/components/StatCard";
 import { Utensils, DollarSign, Sparkles, Check } from "lucide-react";
 import { useMeals } from "@/hooks/useMeals";
-import { useMonthData } from "@/hooks/useMonthData";
+import { useNepaliMonthData } from "@/hooks/useNepaliMonthData";
+import { getCurrentNepaliDate, NEPALI_MONTHS } from "@/lib/nepali-utils";
 import { useSettings } from "@/contexts/SettingsContext";
 import { motion, Variants } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,29 +12,21 @@ import { useMemo } from "react";
 
 export default function TodayPage() {
   const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
+
+  // Get current Nepali Date context
+  const currentNepDate = getCurrentNepaliDate();
+  const nepYear = currentNepDate.getYear();
+  const nepMonth = currentNepDate.getMonth();
 
   const { meal, updateMealRecord, loading: loadingMeals } = useMeals(today);
 
-  // Use useMonthData for consistency and real-time updates
-  const { data, loading: loadingStats } = useMonthData(year, month);
+  // Use new Nepali hook for stats
+  const { totalMeals, totalDays, loading: loadingStats } = useNepaliMonthData(nepYear, nepMonth);
   const { settings } = useSettings();
 
-  // Calculate stats locally
-  const stats = useMemo(() => {
-    let totalMeals = 0;
-
-    Object.values(data).forEach(record => {
-      if (record.morning) totalMeals++;
-      if (record.night) totalMeals++;
-    });
-
-    return {
-      totalMeals,
-      estimatedCost: totalMeals * settings.pricePerMeal
-    };
-  }, [data, settings.pricePerMeal]);
+  const estimatedCost = useMemo(() => {
+    return totalMeals * settings.pricePerMeal;
+  }, [totalMeals, settings.pricePerMeal]);
 
   const handleMealUpdate = (type: 'morning' | 'night', value: boolean | null) => {
     const previousValue = meal[type];
@@ -124,26 +117,38 @@ export default function TodayPage() {
 
             {/* Mini Stats Row */}
             <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="bg-background/40 rounded-2xl p-3 border border-white/10 flex items-center gap-3">
-                <div className="p-2 bg-emerald-100/80 dark:bg-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400">
-                  <DollarSign className="w-4 h-4" />
+              <div className="bg-background/40 rounded-2xl p-4 border border-white/10 flex flex-col justify-center gap-1 group/stat hover:bg-background/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="p-1.5 bg-emerald-100/80 dark:bg-emerald-500/20 rounded-lg text-emerald-600 dark:text-emerald-400">
+                    <DollarSign className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground group-hover/stat:text-foreground transition-colors">Est. Cost</span>
                 </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Est. Cost</p>
-                  <p className="font-bold text-foreground">
-                    {loadingStats ? "..." : `₹${stats.estimatedCost.toLocaleString()}`}
+                <div className="pl-1">
+                  <p className="font-display text-xl font-bold text-foreground">
+                    {loadingStats ? "..." : `₹${estimatedCost.toLocaleString()}`}
                   </p>
+                  <p className="text-[10px] text-muted-foreground font-medium">For {NEPALI_MONTHS[nepMonth]}</p>
                 </div>
               </div>
-              <div className="bg-background/40 rounded-2xl p-3 border border-white/10 flex items-center gap-3">
-                <div className="p-2 bg-blue-100/80 dark:bg-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400">
-                  <Utensils className="w-4 h-4" />
+
+              <div className="bg-background/40 rounded-2xl p-4 border border-white/10 flex flex-col justify-center gap-1 group/stat hover:bg-background/50 transition-colors">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="p-1.5 bg-blue-100/80 dark:bg-blue-500/20 rounded-lg text-blue-600 dark:text-blue-400">
+                    <Utensils className="w-4 h-4" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground group-hover/stat:text-foreground transition-colors">Monthly Goal</span>
                 </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Monthly</p>
-                  <p className="font-bold text-foreground">
-                    {loadingStats ? "..." : `${stats.totalMeals} / 60`}
-                  </p>
+                <div className="pl-1">
+                  <div className="flex items-baseline gap-1.5">
+                    <p className="font-display text-xl font-bold text-foreground">
+                      {loadingStats ? "..." : totalMeals}
+                    </p>
+                    <p className="text-xs font-semibold text-muted-foreground/80">
+                      / {totalDays * 2}
+                    </p>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground font-medium">Meals tracked</p>
                 </div>
               </div>
             </div>

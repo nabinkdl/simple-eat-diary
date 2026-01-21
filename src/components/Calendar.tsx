@@ -6,6 +6,11 @@ import {
   isFutureDate,
   MealRecord
 } from "@/lib/storage";
+import {
+  getDaysInNepaliMonth,
+  NEPALI_MONTHS,
+  WEEKDAYS
+} from "@/lib/nepali-utils";
 
 interface CalendarProps {
   currentDate: Date;
@@ -13,12 +18,6 @@ interface CalendarProps {
   onDateSelect: (date: Date) => void;
   data: Record<string, MealRecord>;
 }
-
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const NEPALI_MONTHS = [
-  'Baisakh', 'Jestha', 'Asar', 'Saun', 'Bhadra', 'Aswin',
-  'Kartik', 'Mangsir', 'Poush', 'Magh', 'Falgun', 'Chaitra'
-];
 
 export function Calendar({ currentDate, onMonthChange, onDateSelect, data }: CalendarProps) {
   // Convert current view date to Nepali to determine Year/Month to show
@@ -58,13 +57,6 @@ export function Calendar({ currentDate, onMonthChange, onDateSelect, data }: Cal
   };
 
   // Generate days for the current Nepali Month
-  // NepaliDate library doesn't have a direct "getDaysInMonth", but we can iterate
-  // or use the fact that day 32 will overflow to next month explicitly if logic permits,
-  // but simpler to look for library methods or just iterate.
-  // Actually commonly we can just check:
-  // (new NepaliDate(year, month + 1, 1).toJsDate() - new NepaliDate(year, month, 1).toJsDate()) / 86400000 approx
-
-  // Better approach: Populate the grid safely.
   // Get 1st of this month
   const startOfMonth = new NepaliDate(nepYear, nepMonth, 1);
   const startOfMonthJs = startOfMonth.toJsDate();
@@ -72,25 +64,13 @@ export function Calendar({ currentDate, onMonthChange, onDateSelect, data }: Cal
   // Find which day of week (0-6) the 1st falls on
   const startDayOfWeek = startOfMonthJs.getDay(); // 0 = Sunday
 
-  // Get total days in this Nepali month
-  // Note: nepali-date-converter might not strictly enforce day counts in constructor in all versions without a map,
-  // but looking at typical library usage:
-  // We can try to create day 32 and see if it rolls over, or checking the last day.
-  // A safe way: Iterate from 1 until the month changes.
+  // Get days in this month from util
+  const totalDays = getDaysInNepaliMonth(nepYear, nepMonth);
+
   const daysInMonth: { day: number, jsDate: Date }[] = [];
-  let d = 1;
-  while (true) {
-    // Check if day exists in this month by creating date and checking back
-    // Or just simple increment
-    try {
-      const checkDate = new NepaliDate(nepYear, nepMonth, d);
-      if (checkDate.getMonth() !== nepMonth) break; // Rolled over
-      daysInMonth.push({ day: d, jsDate: checkDate.toJsDate() });
-      d++;
-      if (d > 32) break; // Safety
-    } catch (e) {
-      break; // Invalid date
-    }
+  for (let d = 1; d <= totalDays; d++) {
+    const checkDate = new NepaliDate(nepYear, nepMonth, d);
+    daysInMonth.push({ day: d, jsDate: checkDate.toJsDate() });
   }
 
   const getDayStatus = (date: Date): 'success' | 'partial' | 'missed' | 'empty' | 'future' | 'today' => {

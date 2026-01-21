@@ -10,62 +10,34 @@ import { useSettings } from "@/contexts/SettingsContext";
 import NepaliDate from "nepali-date-converter";
 import { getDateKey, MealRecord } from "@/lib/storage";
 
+import { useNepaliMonthData } from "@/hooks/useNepaliMonthData";
+
+// ... inside component ...
+
 export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  // currentDate represents the "View Date" for the calendar (determines which month is shown)
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const { meals, loading } = useAllMeals();
+  const { meals, loading } = useAllMeals(); // Still needed for Calendar grid prop? Actually Calendar uses it internally or we pass it?
+  // Calendar component takes `data` prop which is `meals`.
+
   const { settings } = useSettings();
 
-  // Transform data for the chart & stats based on Nepali Month
-  const { chartData, stats } = useMemo(() => {
-    // Determine the Nepali Year/Month from the view 'currentDate'
-    const nepDate = new NepaliDate(currentDate);
-    const nepYear = nepDate.getYear();
-    const nepMonth = nepDate.getMonth();
+  // Determine the Nepali Year/Month from the view 'currentDate'
+  const nepDate = new NepaliDate(currentDate);
+  const nepYear = nepDate.getYear();
+  const nepMonth = nepDate.getMonth();
 
-    const chart = [];
-    let totalMeals = 0;
+  // Use the shared hook for stats and chart
+  const { chartData, totalMeals, totalDays, loading: loadingStats } = useNepaliMonthData(nepYear, nepMonth);
 
-    // We can't easily ask "days in month" from the library directly without a map or iteration.
-    // Iterating 1..32 safe loop, same logic as Calendar.
-    let d = 1;
+  const stats = useMemo(() => ({
+    totalMeals,
+    estimatedCost: totalMeals * settings.pricePerMeal,
+    totalPossible: totalDays * 2
+  }), [totalMeals, totalDays, settings.pricePerMeal]);
 
-    while (true) {
-      try {
-        const checkDate = new NepaliDate(nepYear, nepMonth, d);
-        if (checkDate.getMonth() !== nepMonth) break; // Rolled over to next month
-
-        // Convert to JS Date to check our meal data
-        const jsDate = checkDate.toJsDate();
-        const dateKey = getDateKey(jsDate);
-
-        const record = meals[dateKey];
-        let count = 0;
-        if (record) {
-          if (record.morning) count++;
-          if (record.night) count++;
-        }
-        totalMeals += count;
-        chart.push({ day: d, meals: count });
-
-        d++;
-        if (d > 35) break;
-      } catch (e) {
-        break;
-      }
-    }
-
-    return {
-      chartData: chart,
-      stats: {
-        totalMeals,
-        estimatedCost: totalMeals * settings.pricePerMeal
-      }
-    };
-  }, [meals, currentDate, settings.pricePerMeal]);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -95,12 +67,15 @@ export default function CalendarPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-sm font-medium text-muted-foreground">Monthly Overview</p>
-            {loading ? (
+            {(loading || loadingStats) ? (
               <Skeleton className="h-8 w-24 mt-1 rounded-lg" />
             ) : (
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-bold font-display">{stats.totalMeals}</span>
-                <span className="text-sm text-emerald-500 font-medium bg-emerald-100/50 px-2 py-0.5 rounded-full">
+                <span className="text-sm text-muted-foreground font-medium">
+                  / {stats.totalPossible}
+                </span>
+                <span className="text-sm text-emerald-500 font-medium bg-emerald-100/50 px-2 py-0.5 rounded-full ml-2">
                   Meals
                 </span>
               </div>
@@ -108,7 +83,7 @@ export default function CalendarPage() {
           </div>
           <div className="text-right">
             <p className="text-sm font-medium text-muted-foreground">Est. Cost</p>
-            {loading ? (
+            {(loading || loadingStats) ? (
               <Skeleton className="h-8 w-24 mt-1 rounded-lg ml-auto" />
             ) : (
               <span className="text-2xl font-bold font-display">₹{stats.estimatedCost.toLocaleString()}</span>
