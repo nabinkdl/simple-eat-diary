@@ -17,6 +17,14 @@ export function PWAInstallBanner() {
     const [androidHelpOpen, setAndroidHelpOpen] = useState(false);
 
     useEffect(() => {
+        // Check local storage for dismissal
+        const dismissedAt = localStorage.getItem('pwa_dismissed_at');
+        if (dismissedAt) {
+            const diff = Date.now() - parseInt(dismissedAt, 10);
+            const twoDays = 2 * 24 * 60 * 60 * 1000;
+            if (diff < twoDays) return;
+        }
+
         // Show banner if not installed (standalone) and either installable or on mobile
         // Delay slightly to not annoy immediately
         const timer = setTimeout(() => {
@@ -39,6 +47,7 @@ export function PWAInstallBanner() {
     };
 
     const handleDismiss = () => {
+        localStorage.setItem('pwa_dismissed_at', Date.now().toString());
         setIsVisible(false);
     };
 
@@ -52,7 +61,7 @@ export function PWAInstallBanner() {
                         initial={{ y: 100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: 100, opacity: 0 }}
-                        className="fixed bottom-0 left-0 right-0 z-50 p-4 pb-8 sm:pb-4 pointer-events-none flex justify-center"
+                        className="fixed bottom-20 md:bottom-6 left-0 right-0 z-50 p-4 pointer-events-none flex justify-center"
                     >
                         <div className="bg-foreground/90 backdrop-blur-md text-background p-4 rounded-3xl shadow-2xl w-full max-w-md pointer-events-auto flex items-center justify-between gap-4 border border-white/10">
                             <div className="flex items-center gap-3">
