@@ -43,7 +43,8 @@ export default function AnalyticsPage() {
             // Group by Nepali Month
             // Convert key (YYYY-MM-DD) to date then to Nepali
             const [y, m, d] = key.split('-').map(Number);
-            const date = new Date(y, m - 1, d);
+            // Create date at noon to avoid midnight boundary issues with timezones when converting
+            const date = new Date(y, m - 1, d, 12, 0, 0);
             const nepDate = new NepaliDate(date);
             const monthName = `${NEPALI_MONTHS[nepDate.getMonth()]} ${nepDate.getYear()}`; // Unique key per month-year
 

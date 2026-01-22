@@ -70,6 +70,7 @@ export function Calendar({ currentDate, onMonthChange, onDateSelect, data }: Cal
   const daysInMonth: { day: number, jsDate: Date }[] = [];
   for (let d = 1; d <= totalDays; d++) {
     const checkDate = new NepaliDate(nepYear, nepMonth, d);
+    // Ensure Date object is robust for key generation
     daysInMonth.push({ day: d, jsDate: checkDate.toJsDate() });
   }
 

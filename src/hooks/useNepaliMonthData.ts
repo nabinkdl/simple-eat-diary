@@ -29,14 +29,25 @@ export function useNepaliMonthData(nepYear: number, nepMonth: number) {
                 // Safer: new NepaliDate(nepYear, nepMonth, d) 
                 // Safer: new NepaliDate(nepYear, nepMonth, d)
                 const checkDate = new NepaliDate(nepYear, nepMonth, d);
-                const jsDate = checkDate.toJsDate();
-                const key = getDateKey(jsDate);
+                // jsDate from a library might have specific time components. 
+                // We must ensure it aligns with getDateKey's expectation (local time, or specific normalization)
+                const rawJsDate = checkDate.toJsDate();
+
+                // Construct a new Date using the components to avoid timezone shifts affecting getFullYear/etc if the library returns UTC
+                // Actually, getDateKey uses local .getFullYear(). 
+                // Let's rely on standard Date behavior but ensure we're looking at the same "day".
+
+                const key = getDateKey(rawJsDate);
+
+                // Debugging (remove in prod or keep for dev)
+                // console.log(`Day ${d}: ${key} - ${meals[key] ? 'Found' : 'Empty'}`);
 
                 const record = meals[key];
                 let dailyCount = 0;
 
                 if (record) {
                     filteredData[key] = record;
+                    // Count yes
                     if (record.morning) {
                         dailyCount++;
                         totalMeals++;
@@ -49,7 +60,7 @@ export function useNepaliMonthData(nepYear: number, nepMonth: number) {
 
                 chartData.push({ day: d, meals: dailyCount });
             } catch (e) {
-                // Ignore invalid dates if any
+                // Ignore invalid
             }
         }
 

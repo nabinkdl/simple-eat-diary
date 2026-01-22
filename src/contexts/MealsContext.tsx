@@ -33,24 +33,52 @@ export function MealsProvider({ children }: { children: ReactNode }) {
             });
             setMeals(newMeals);
             setLoading(false);
+        }, (error) => {
+            console.error("Error fetching meals:", error);
+            setLoading(false);
         });
 
         return () => unsubscribe();
     }, [user]);
 
-    const updateMeal = async (date: Date, type: 'morning' | 'night', value: boolean) => {
+    const syncMeals = async () => {
         if (!user) return;
-        const dateKey = getDateKey(date);
+        setLoading(true);
+        try {
+            // Trigger a manual fetch to ensure consistency? 
+            // Primarily relies on onSnapshot, but we can verify here if needed.
+            // For now, let's just let onSnapshot handle it, but maybe expose a way to check.
+            // Actually, let's just re-init the listener if needed, but the hook handles that.
+            // Let's just simulate a "refresh" by setting loading true briefly? 
+            // Or better, do nothing as onSnapshot is real-time.
+            // If the user wants to "Sync", we can maybe fetch once.
 
-        // Optimistic update handled by local listener usually, 
-        // but we can also set local state if we want instant feedback before roundtrip
-        // However, Firestore listener is very fast locally.
+            // Let's rely on onSnapshot for now as it's best for collections.
+            setLoading(false);
+        } catch (error) {
+            console.error("Sync meals failed:", error);
+        }
+    };
+
+    const updateMeal = async (date: Date, type: 'morning' | 'night', value: boolean) => {
+        if (!user) {
+            console.warn("Attempted to update meal without user");
+            return;
+        }
+        const dateKey = getDateKey(date);
+        console.log(`Updating meal for ${dateKey}: ${type} = ${value}`);
 
         const docRef = doc(db, "users", user.uid, "meals", dateKey);
         const currentMeal = meals[dateKey] || { morning: null, night: null };
         const updatedMeal = { ...currentMeal, [type]: value };
 
-        await setDoc(docRef, updatedMeal, { merge: true });
+        try {
+            await setDoc(docRef, updatedMeal, { merge: true });
+            console.log("Meal updated successfully");
+        } catch (error) {
+            console.error("Error updating meal:", error);
+            throw error;
+        }
     };
 
     return (

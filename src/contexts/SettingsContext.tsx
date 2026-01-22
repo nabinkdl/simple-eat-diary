@@ -32,7 +32,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         const unsubscribe = onSnapshot(settingsRef, async (docSnap) => {
             if (docSnap.exists()) {
                 // Cloud settings exist, use them
-                setSettings({ ...getSettings(), ...docSnap.data() } as AppSettings);
+                const cloudData = docSnap.data();
+                const merged = { ...getSettings(), ...cloudData } as AppSettings;
+                setSettings(merged);
+                persistSettings(merged); // Update local storage with latest cloud data
             } else {
                 // Cloud settings don't exist yet (first login)
                 // Upload current local settings to initialize cloud
