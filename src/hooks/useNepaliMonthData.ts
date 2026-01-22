@@ -25,9 +25,8 @@ export function useNepaliMonthData(nepYear: number, nepMonth: number) {
             // but we want to iterate 1..daysInMonth for the Chart x-axis.
             try {
                 // date for this day
-                const currentNepDate = new NepaliDate(nepYear, nepMonth);
-                currentNepDate.setMethod?.('setDate', d) || currentNepDate.setDay?.(d);
                 // Note: nepali-date-converter API might vary. 
+                // Safer: new NepaliDate(nepYear, nepMonth, d) 
                 // Safer: new NepaliDate(nepYear, nepMonth, d)
                 const checkDate = new NepaliDate(nepYear, nepMonth, d);
                 const jsDate = checkDate.toJsDate();

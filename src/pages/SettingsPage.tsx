@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { AppSettings } from "@/lib/storage";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { Shield, CreditCard, Download, Share, PlusSquare } from "lucide-react";
+import { Shield, CreditCard, Download, Share, PlusSquare, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { UserCard } from "@/components/settings/UserCard";
 import { PreferenceItem } from "@/components/settings/PreferenceItem";
@@ -18,20 +18,38 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export default function SettingsPage() {
   const { user, logout } = useAuth();
-  const { settings, updateSettings } = useSettings();
+  const { settings, updateSettings, loading: settingsLoading, syncNow } = useSettings();
   const [localSettings, setLocalSettings] = useState<AppSettings>(settings);
   const [isDirty, setIsDirty] = useState(false);
   const { isInstallable, isStandalone, isIOS, install } = usePWA();
   const [pinCheckOpen, setPinCheckOpen] = useState(false);
   const [iosHelpOpen, setIosHelpOpen] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Sync local state if context updates
   useEffect(() => {
     setLocalSettings(settings);
   }, [settings]);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      await syncNow();
+      toast("Sync Complete", {
+        description: "Your settings are up to date.",
+      });
+    } catch (error) {
+      toast.error("Sync Failed", {
+        description: "Check your connection and try again.",
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const handleSave = () => {
     updateSettings(localSettings);
@@ -58,6 +76,22 @@ export default function SettingsPage() {
       });
     }
   };
+
+  if (settingsLoading) {
+    return (
+      <div className="space-y-8 pb-24 pt-6 px-2">
+        <div className="space-y-2">
+          <div className="h-8 w-48 bg-muted/20 rounded-lg animate-pulse" />
+          <div className="h-4 w-32 bg-muted/20 rounded-lg animate-pulse" />
+        </div>
+        <div className="h-24 w-full bg-muted/20 rounded-3xl animate-pulse" />
+        <div className="space-y-4">
+          <div className="h-4 w-24 bg-muted/20 rounded animate-pulse" />
+          <div className="h-64 w-full bg-muted/20 rounded-3xl animate-pulse" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -99,6 +133,26 @@ export default function SettingsPage() {
               }
             />
           )}
+
+          {/* Sync Data */}
+          <PreferenceItem
+            icon={<RefreshCw className={`w-5 h-5 ${isSyncing ? "animate-spin" : ""}`} />}
+            title="Cloud Sync"
+            description={user ? "Syncing with your account" : "Sign in to sync data"}
+            iconBgColor="bg-violet-100/50"
+            iconColor="text-violet-600"
+            action={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSync}
+                disabled={isSyncing || !user}
+                className="rounded-xl border-violet-200 text-violet-600 hover:text-violet-700 hover:bg-violet-50"
+              >
+                {isSyncing ? "Syncing..." : "Sync Now"}
+              </Button>
+            }
+          />
 
           {/* Price Setting */}
           <PreferenceItem
